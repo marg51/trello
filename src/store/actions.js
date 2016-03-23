@@ -30,6 +30,42 @@ function actionsCreatorFactory(prefix) {
                 id,
                 object
             }
+        },
+        pop(id, {field, index}) {
+            if(typeof id == "undefined") {
+                throw new Error('id is required')
+            }
+            if(typeof field == "undefined") {
+                throw new Error('field is required')
+            }
+            if(typeof index == "undefined") {
+                throw new Error('index is required')
+            }
+
+            return {
+                type: prefix+'POP',
+                id,
+                field,
+                index
+            }
+        },
+        push(id, {field, value}) {
+            if(typeof id == "undefined") {
+                throw new Error('id is required')
+            }
+            if(typeof field == "undefined") {
+                throw new Error('field is required')
+            }
+            if(typeof value == "undefined") {
+                throw new Error('value is required')
+            }
+
+            return {
+                type: prefix+'PUSH',
+                id,
+                field,
+                value
+            }
         }
     }
 }

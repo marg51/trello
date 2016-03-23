@@ -11,11 +11,18 @@ import { Router, Route, browserHistory, IndexRoute } from 'react-router'
 import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
 
 
-import reducers from './store/reducers'
+import {reducers} from './store/reducers'
 
-const store = createStore(
+console.log(reducers)
+export const store = createStore(
   combineReducers({
-    ...reducers,
+    entities: reducers,
+    user: (state = {isLoggedIn:false}, action) => {
+        if(action.type == "login")
+            return {isLoggedIn: true}
+
+        return state
+    },
     routing: routerReducer
   }),
   {},
@@ -26,6 +33,7 @@ const history = syncHistoryWithStore(browserHistory, store)
 
 history.listen(location => console.log(location))
 
+import actions from './store/actions'
 
 ReactDOM.render(
   <Provider store={store}>

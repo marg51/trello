@@ -4,13 +4,15 @@ function enhancer({PREFIX, INIT_STATE}, reducer) {
     return function enhancedReducer(state = {...INIT_STATE}, action) {
         switch(action.type) {
             case PREFIX+'CREATE':
+                // don't add duplicates
+                const ids = (state.ids.includes(action.object.id)) ? state.ids : [...state.ids, action.object.id]
                 return {
                     ...state,
                     items: {
                         ...state.items,
                         [action.object.id]: action.object
                     },
-                    ids: [...state.ids, action.object.id]
+                    ids
                 }
             case PREFIX+'DELETE':
                 return {
@@ -32,6 +34,37 @@ function enhancer({PREFIX, INIT_STATE}, reducer) {
                         [action.id]: {
                             ...state.items[action.id],
                             ...action.object
+                        }
+                    }
+                }
+
+
+            // this could be done using UPDATE but it's easier using pop
+            case PREFIX+'POP':
+                return {
+                    ...state,
+                    items: {
+                        ...state.items,
+                        [action.id]: {
+                            ...state.items[action.id],
+                            [action.field]: state.items[action.id][action.field].filter((value, index) => index != action.index)
+                        }
+                    }
+                }
+
+            // this could be done using UPDATE but it's easier using push
+            case PREFIX+'PUSH':
+                // prevent doubles
+                if(state.items[action.id][action.field].includes(action.value))
+                    return state
+
+                return {
+                    ...state,
+                    items: {
+                        ...state.items,
+                        [action.id]: {
+                            ...state.items[action.id],
+                            [action.field]: [...state.items[action.id][action.field], action.value]
                         }
                     }
                 }

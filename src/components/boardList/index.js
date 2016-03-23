@@ -9,7 +9,7 @@ function BoardList({boardsId,boards, select}) {
         <ul>
         {
             boardsId.map(e =>
-                <li><Link to={`/board/${e}`}>{boards[e].name}</Link></li>
+                <li key={`board_${e}`} ><Link to={`/board/${e}`}>{boards[e].name}</Link></li>
             )
         }
         </ul>
@@ -24,4 +24,4 @@ function select(id) {
     }
 }
 
-export default connect(state => ({boardsId: state.app.boardsId, boards: state.app.boards}), {select})(BoardList)
+export default connect(state => ({boardsId: state.entities.board.ids, boards: state.entities.board.items}), {select})(BoardList)
