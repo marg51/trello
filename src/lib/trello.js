@@ -33,6 +33,7 @@ export default {
     getBoards: () => decorate('/members/me/boards', data => {
         data.map(board => {
             board.lists = []
+            board.members = []
             store.dispatch({type: 'BOARD:CREATE', object: board})
         })
     }),
@@ -45,6 +46,14 @@ export default {
             list.cards = []
             store.dispatch({type: 'LIST:CREATE', object: list})
             store.dispatch({type: 'BOARD:PUSH', id:boardId, field: "lists", value: list.id})
+        })
+
+    }),
+    getBoardMembers: (boardId) => decorate(`/boards/${boardId}/members?fields=fullName,username,avatarHash,initials`, (data) => {
+        data.map(list => {
+            list.cards = []
+            store.dispatch({type: 'MEMBER:CREATE', object: list})
+            store.dispatch({type: 'BOARD:PUSH', id:boardId, field: "members", value: list.id})
         })
 
     }),

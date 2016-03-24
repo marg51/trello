@@ -7,9 +7,12 @@ import Trello from '../../lib/trello'
 
 class Board extends Component {
     componentWillMount() {
-        Trello.getBoard(this.props.params.boardId).then(() =>
-            Trello.getBoardLists(this.props.params.boardId)
-        ).then(lists =>
+        Trello.getBoard(this.props.params.boardId).then(() => {
+            // we don't wait for members
+            Trello.getBoardMembers(this.props.params.boardId)
+            // but we wait for lists
+            return Trello.getBoardLists(this.props.params.boardId)
+        }).then(lists =>
             Promise.all(lists.map(list =>
                 Trello.getListCards(list.id)
             ))
@@ -47,7 +50,7 @@ class Board extends Component {
         }
 
         return (
-            <div className="board">
+            <div className="board" style={{background: board.prefs.backgroundColor, color: (board.prefs.backgroundBrightness == "dark")?'white':'black'}}>
                 <h1>{board.name}</h1>
                 {board.lists.map(list =>
                     <div key={`list_${list}`} className="list"><List listId={list}/></div>

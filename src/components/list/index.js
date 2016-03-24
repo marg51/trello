@@ -10,12 +10,13 @@ function List({list, dispatch}) {
     return (
         <div>
 
-            <h3>{list.name}</h3>
+            <header className="list-header">{list.name}</header>
             <div className="list-content">
                 {list.cards.map(card =>
                     <div key={`card_${card}`} className="card"><Card cardId={card}/></div>
                 )}
              </div>
+             <footer className="list-footer">add card</footer>
         </div>
     )
 }

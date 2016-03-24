@@ -29,6 +29,8 @@ export const store = createStore(
   window.devToolsExtension ? window.devToolsExtension() : undefined
 )
 
+window.__store = store
+
 const history = syncHistoryWithStore(browserHistory, store)
 
 history.listen(location => console.log(location))

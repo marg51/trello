@@ -28,15 +28,18 @@ class Bar extends Component {
 }
 
 function Login({dispatch}) {
-    Trello.login().then(() => {
-        dispatch({type: 'login'})
-        Trello.getBoards()
-    }, () => {
-        alert('error')
-    })
+    function login() {
+        Trello.login().then(() => {
+            dispatch({type: 'login'})
+            Trello.getBoards()
+        }, () => {
+            alert('error')
+        })
+    }
+    login()
     return (
       <div>
-        Login …
+        <button onClick={login}>Please login</button>
       </div>
     );
 }
