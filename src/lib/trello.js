@@ -3,6 +3,9 @@ import {store} from '../'
 const cache = {}
 const decorate = (endpoint, callback) =>  {
 
+    // mock
+    // return new Promise(resolve => resolve())
+
     if(!cache[endpoint]) {
         cache[endpoint] =  new Promise((resolve, reject) => {
             Trello.get(endpoint, (data) => {
@@ -59,8 +62,26 @@ export default {
     }),
     getListCards: (listId) => decorate(`/lists/${listId}/cards`, (data) => {
         data.map(card => {
+            card.checklists = []
+            card.attachments = []
+            card.actions = []
             store.dispatch({type: 'CARD:CREATE', object: card})
             store.dispatch({type: 'LIST:PUSH', id:listId, field: "cards", value: card.id})
+        })
+    }),
+    getCardAttachments: (cardId) => decorate(`/cards/${cardId}/attachments`, (data) => {
+        data.map(attachment => {
+            store.dispatch({type: 'CARD:PUSH', id:cardId, field: "attachments", value: attachment})
+        })
+    }),
+    getCardChecklists: (cardId) => decorate(`/cards/${cardId}/checklists`, (data) => {
+        data.map(checklist => {
+            store.dispatch({type: 'CARD:PUSH', id:cardId, field: "checklists", value: checklist})
+        })
+    }),
+    getCardActions: (cardId) => decorate(`/cards/${cardId}/actions?filter=addAttachmentToCard,commentCard`, (data) => {
+        data.map(action => {
+            store.dispatch({type: 'CARD:PUSH', id:cardId, field: "actions", value: action})
         })
     })
 }

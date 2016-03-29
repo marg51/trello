@@ -3,16 +3,19 @@ import {connect} from 'react-redux'
 import { Link } from 'react-router'
 import List from '../list'
 import Trello from '../../lib/trello'
-
+import Loader from 'react-loaders'
 
 class Board extends Component {
     componentWillMount() {
-        Trello.getBoard(this.props.params.boardId).then(() => {
+        Trello.getBoard(this.props.params.boardId).then(() =>
             // we don't wait for members
-            Trello.getBoardMembers(this.props.params.boardId)
-            // but we wait for lists
-            return Trello.getBoardLists(this.props.params.boardId)
-        }).then(lists =>
+            Promise.all([
+                Trello.getBoardMembers(this.props.params.boardId),
+                Trello.getBoardLists(this.props.params.boardId)
+            ])
+        ).then(results =>
+            results[1]
+        ).then(lists =>
             Promise.all(lists.map(list =>
                 Trello.getListCards(list.id)
             ))
@@ -45,8 +48,12 @@ class Board extends Component {
     render() {
         const board = this.props.boards[this.props.params.boardId]
 
+        // if(false){ // !board || !this.state || !this.state.isReady) {
         if(!board || !this.state || !this.state.isReady) {
-            return (<div>Loading board</div>)
+            return (
+                <div style={{height: "calc(100vh - 50px)", verticalAlign: "middle", textAlign: "center"}}>
+                    <Loader type="ball-clip-rotate-multiple" style={{width: "100px",height: "100px",lineHeight: "100px",margin: "auto",marginTop: "45vh",transform: "scale(2)"}}>Loading board</Loader>
+                </div>)
         }
 
         return (
@@ -60,4 +67,10 @@ class Board extends Component {
     }
 }
 
-export default connect( (state) => ({boards: state.entities.board.items}))(Board)
+const ConnectedBoard = connect( (state) => ({boards: state.entities.board.items}))(Board)
+
+function BoardContainer(props) {
+    return (<div><Board key={`board_${props.boardId}`} {...props}/></div>)
+}
+
+export default connect( (state, props) => ({boardId: props.params.boardId, boards: state.entities.board.items}))(BoardContainer)

@@ -55,7 +55,7 @@ function enhancer({PREFIX, INIT_STATE}, reducer) {
             // this could be done using UPDATE but it's easier using push
             case PREFIX+'PUSH':
                 // prevent doubles
-                if(state.items[action.id][action.field].includes(action.value))
+                if(!state.items[action.id][action.field] || state.items[action.id][action.field].includes(action.value))
                     return state
 
                 return {

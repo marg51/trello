@@ -9,7 +9,7 @@ import Icon from '../../utils/icon'
 function Card({card, dispatch}) {
     let input;
     return (
-        <div>
+        <div onClick={() => dispatch({type: 'select:card', id: card.id})}>
             <div>{card.labels.map(e => <Label label={e} key={`label_${e.id}`}/>)}</div>
             {card.name}
             <div>
@@ -23,6 +23,9 @@ function Card({card, dispatch}) {
                     <Icon icon="paperclip">{card.badges.attachments}</Icon>
                 </If>
 
+                <If test={card.badges.checkItems}>
+                    <Icon icon="check-square-o">{card.badges.checkItemsChecked}/{card.badges.checkItems}</Icon>
+                </If>
 
                 <span style={{float: "right"}}>
                     {card.idMembers.map(member =>
