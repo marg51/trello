@@ -58,6 +58,9 @@ function connect(token, callbacks = [], listened = []) {
         },
         getStatus() {
             return socket.readyState
+        },
+        send(data) {
+            socket.send(data)
         }
     }
 

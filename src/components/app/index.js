@@ -13,7 +13,7 @@ class BoardContainer extends Component {
             Trello.getWs().listenTo("orga", "508666007e639aad130003e3")
         })
         Trello.getWs().onEvent(data => {
-            dispatch(TrelloToActions(data))
+            TrelloToActions(this.props.state, this.props.dispatch, data)
         })
     }
     render() {
@@ -60,11 +60,12 @@ function Login({dispatch}) {
 
 const ConnectedLogin = connect((state) => ({state}))(Login)
 
-function App({isLoggedIn, isModalOpen, children, dispatch}) {
+function App(props) {
+    let {isLoggedIn, isModalOpen, children, dispatch, state} = props
     const closeModal = () => {dispatch({type: 'select:card', id: 0})}
     if(isLoggedIn)
         return (<div>
-            <BoardContainer>{children}</BoardContainer>
+            <BoardContainer {...props}>{children}</BoardContainer>
             </div>)
   return (
       <div>
@@ -74,5 +75,5 @@ function App({isLoggedIn, isModalOpen, children, dispatch}) {
 }
 
 export default connect(
-    state => ({isLoggedIn: state.user.isLoggedIn, isModalOpen: state.user.isModalOpen})
+    state => ({isLoggedIn: state.user.isLoggedIn, isModalOpen: state.user.isModalOpen, state})
 )(App)

@@ -11,7 +11,9 @@ import { Router, Route, browserHistory, IndexRoute } from 'react-router'
 import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
 
 import CardDetails from './components/cardDetails';
+import _ from 'lodash'
 
+window._ = _
 
 import Modal from 'react-modal'
 const style = {

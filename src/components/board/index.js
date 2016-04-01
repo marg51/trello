@@ -50,6 +50,7 @@ class Board extends Component {
 
     render() {
         const board = this.props.boards[this.props.params.boardId]
+        const lists = this.props.lists
 
         // if(false){ // !board || !this.state || !this.state.isReady) {
         if(!board || !this.state || !this.state.isReady) {
@@ -62,19 +63,17 @@ class Board extends Component {
         return (
             <div className="board" style={{background: board.prefs.backgroundColor, color: (board.prefs.backgroundBrightness == "dark")?'white':'black'}}>
                 <h1><Emoji>{board.name}</Emoji></h1>
-                {board.lists.map(list =>
-                    <div key={`list_${list}`} className="list"><List listId={list}/></div>
-                )}
+                {_(board.lists).map(listId => lists[listId]).sortBy('pos').map(list =>
+                    <div key={`list_${list.id}`} className="list"><List listId={list.id}/></div>
+                ).value()}
                 {this.props.children}
             </div>
         )
     }
 }
 
-const ConnectedBoard = connect( (state) => ({boards: state.entities.board.items}))(Board)
-
 function BoardContainer(props) {
     return (<div><Board key={`board_${props.boardId}`} {...props}/></div>)
 }
 
-export default connect( (state, props) => ({boardId: props.params.boardId, boards: state.entities.board.items}))(BoardContainer)
+export default connect( (state, props) => ({boardId: props.params.boardId, boards: state.entities.board.items, lists: state.entities.list.items}))(BoardContainer)

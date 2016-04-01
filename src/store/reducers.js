@@ -51,6 +51,17 @@ function enhancer({PREFIX, INIT_STATE}, reducer) {
                         }
                     }
                 }
+            case PREFIX+'POPVAL':
+                return {
+                    ...state,
+                    items: {
+                        ...state.items,
+                        [action.id]: {
+                            ...state.items[action.id],
+                            [action.field]: state.items[action.id][action.field].filter((value) => value != action.value)
+                        }
+                    }
+                }
 
             // this could be done using UPDATE but it's easier using push
             case PREFIX+'PUSH':

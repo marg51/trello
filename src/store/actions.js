@@ -49,6 +49,24 @@ function actionsCreatorFactory(prefix) {
                 index
             }
         },
+        popValue(id, {field, value}) {
+            if(typeof id == "undefined") {
+                throw new Error('id is required')
+            }
+            if(typeof field == "undefined") {
+                throw new Error('field is required')
+            }
+            if(typeof value == "undefined") {
+                throw new Error('value is required')
+            }
+
+            return {
+                type: prefix+'POPVAL',
+                id,
+                field,
+                value
+            }
+        },
         push(id, {field, value}) {
             if(typeof id == "undefined") {
                 throw new Error('id is required')
