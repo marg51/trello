@@ -4,6 +4,7 @@ import { Link } from 'react-router'
 import List from '../list'
 import Trello from '../../lib/trello'
 import Loader from 'react-loaders'
+import Emoji from '../../utils/emoji'
 
 class Board extends Component {
     componentWillMount() {
@@ -58,10 +59,11 @@ class Board extends Component {
 
         return (
             <div className="board" style={{background: board.prefs.backgroundColor, color: (board.prefs.backgroundBrightness == "dark")?'white':'black'}}>
-                <h1>{board.name}</h1>
+                <h1><Emoji>{board.name}</Emoji></h1>
                 {board.lists.map(list =>
                     <div key={`list_${list}`} className="list"><List listId={list}/></div>
                 )}
+                {this.props.children}
             </div>
         )
     }

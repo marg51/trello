@@ -5,13 +5,14 @@ import Label from '../label'
 import MemberCard from '../memberCard'
 import If from '../../utils/if'
 import Icon from '../../utils/icon'
+import Emoji from '../../utils/emoji'
 
 function Card({card, dispatch}) {
     let input;
     return (
-        <div onClick={() => dispatch({type: 'select:card', id: card.id})}>
+        <div>
             <div>{card.labels.map(e => <Label label={e} key={`label_${e.id}`}/>)}</div>
-            {card.name}
+            <Emoji>{card.name}</Emoji>
             <div>
                 <If test={card.badges.description}>
                     <Icon icon="align-left"/>

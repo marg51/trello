@@ -4,14 +4,36 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import App from './components/app';
 import BoardList from './components/boardList';
-import Board from './components/board';
+import BoardContainer from './components/board';
 import {createStore, combineReducers} from 'redux'
 import { Provider } from 'react-redux'
 import { Router, Route, browserHistory, IndexRoute } from 'react-router'
 import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
 
 
+import CardDetails from './components/cardDetails';
+
+
+import Modal from 'react-modal'
+const style = {
+  overlay : {
+    zIndex            : 2,
+    backgroundColor   : 'rgba(0,0,0,.6)',
+    overflow: "auto"
+  }, content: {
+      maxWidth: "700px",
+      margin: "auto",
+      borderWidth: 0,
+      bottom: null,
+      marginBottom: "40px",
+      backgroundColor: "#F1F1F1"
+  }
+}
+
+
 import {reducers} from './store/reducers'
+
+// import MockTrello from './lib/trello.mock.js'
 
 console.log(reducers)
 export const store = createStore(
@@ -19,13 +41,16 @@ export const store = createStore(
     entities: reducers,
     user: (state = {isLoggedIn:false}, action) => {
         if(action.type == "login")
-            return {isLoggedIn: true}
+            return {...state, isLoggedIn: true}
+        if(action.type == "select:card")
+            return {...state, isModalOpen: action.id}
 
         return state
     },
     routing: routerReducer
   }),
   {},
+// MockTrello,
   window.devToolsExtension ? window.devToolsExtension() : undefined
 )
 
@@ -37,12 +62,26 @@ history.listen(location => console.log(location))
 
 import actions from './store/actions'
 
+function CardModal({params}) {
+    return (
+        <Modal
+            isOpen={true}
+            onRequestClose={() => browserHistory.push(`/board/${params.boardId}/`)}
+            style={style}
+            >
+                <CardDetails cardId={params.cardId}/>
+            </Modal>
+    )
+}
+
 ReactDOM.render(
   <Provider store={store}>
     <Router history={history}>
         <Route path="/" component={App}>
             <Route path="boards" component={BoardList}/>
-            <Route path="board/:boardId" component={Board}/>
+            <Route path="board/:boardId/" component={BoardContainer}>
+                <Route path="card/:cardId" component={CardModal}/>
+            </Route>
         </Route>
     </Router>
   </Provider>,

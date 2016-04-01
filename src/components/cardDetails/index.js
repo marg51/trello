@@ -5,6 +5,8 @@ import Label from '../label'
 import MemberCard from '../memberCard'
 import If from '../../utils/if'
 import Icon from '../../utils/icon'
+import Marked from '../../utils/marked'
+import Emoji from '../../utils/emoji'
 import Action from '../action'
 
 import Trello from '../../lib/trello'
@@ -13,16 +15,16 @@ import Trello from '../../lib/trello'
 class CardDetails extends Component {
 
     componentWillMount() {
-        Trello.getCardAttachments(this.props.card.id)
-        Trello.getCardChecklists(this.props.card.id)
-        Trello.getCardActions(this.props.card.id)
+        Trello.getCardAttachments(this.props.cardId)
+        Trello.getCardChecklists(this.props.cardId)
+        Trello.getCardActions(this.props.cardId)
     }
 
     render() {
         let {card, dispatch} = this.props
         return (
             <div>
-                <header><h1>{card.name}</h1></header>
+                <header><h2><Emoji>{card.name}</Emoji></h2></header>
 
                 <div>
                     <div>
@@ -31,16 +33,15 @@ class CardDetails extends Component {
                             <div>{card.labels.map(e => <Label label={e} key={`label_${e.id}`}/>)}</div>
                         </If>
                         <div>
-                            <div style={{marginTop: "50px", whiteSpace: "pre-wrap"}}>
-                                <span className="_color_02">Description</span>
-                                <p>{card.desc}</p>
+                            <div style={{margin: "30px 0", backgroundColor: "white", padding: "10px", borderRadius: "5px"}} className="paper">
+                                <Marked text={card.desc}/>
                             </div>
 
                             Checklist: {card.checklists.length}<br />
                             <If test={card.checklists.length}>
                                 {card.checklists.map(checklist =>
                                     <div>
-                                        <h3><Icon icon="check-square-o"/> {checklist.name}</h3>
+                                        <h3><Icon icon="check-square-o"/><Emoji>{checklist.name}</Emoji></h3>
                                             {checklist.checkItems.map(item =>
                                                 <div>
                                                     <If test={item.state == 'incomplete'}>
@@ -50,7 +51,7 @@ class CardDetails extends Component {
                                                         <Icon icon="check-circle-o"/>
                                                     </If>
                                                     {' '}
-                                                    {item.name}
+                                                    <Emoji>{item.name}</Emoji>
                                                 </div>
                                             )}
                                         </div>
@@ -60,12 +61,12 @@ class CardDetails extends Component {
 
                             <If test={card.attachments.length}>
                                 <ul>
-                                    {card.attachments.map(attachment => <li key={`action_${attachment.id}`}><MemberCard memberId={attachment.idMember}/> <img src={attachment.previews[1].url} style={{width:attachment.previews[1].width+'px', height:attachment.previews[1].height+'px'}} /></li>)}
+                                    {card.attachments.map(attachment => <li key={`action_${attachment.id}`}><MemberCard memberId={attachment.idMember}/> <img src={attachment.previews[1].url} style={{width:attachment.previews[1].width+'px', height:attachment.previews[1].height+'px'}} className="paper-2"/></li>)}
                                 </ul>
                             </If>
 
                             <If test={card.actions.length}>
-                                {card.actions.map(action => <Action action={action} key={`action_${action.id}`}/>)}
+                                {card.actions.map(action => <div style={{marginTop: "20px"}}  key={`action_${action.id}`}><Action action={action}/></div>)}
                             </If>
 
                             <span style={{float: "right"}}>

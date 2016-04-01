@@ -9,7 +9,7 @@ function BoardList({boardsId,boards, select}) {
         <ul>
         {
             boardsId.map(e =>
-                <li key={`board_${e}`} ><Link to={`/board/${e}`}>{boards[e].name}</Link></li>
+                <li key={`board_${e}`} ><Link to={`/board/${e}/`}>{boards[e].name}</Link></li>
             )
         }
         </ul>

@@ -79,7 +79,7 @@ export default {
             store.dispatch({type: 'CARD:PUSH', id:cardId, field: "checklists", value: checklist})
         })
     }),
-    getCardActions: (cardId) => decorate(`/cards/${cardId}/actions?filter=addAttachmentToCard,commentCard`, (data) => {
+    getCardActions: (cardId) => decorate(`/cards/${cardId}/actions?filter=all`/*addAttachmentToCard,commentCard`*/, (data) => {
         data.map(action => {
             store.dispatch({type: 'CARD:PUSH', id:cardId, field: "actions", value: action})
         })
