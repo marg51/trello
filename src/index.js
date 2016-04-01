@@ -10,6 +10,11 @@ import { Provider } from 'react-redux'
 import { Router, Route, browserHistory, IndexRoute } from 'react-router'
 import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
 
+import WS from './lib/ws-trello'
+
+
+
+WS(TOKEN, [data => console.log(data)], ["56f10fa9f7d9324f06681cfd"])
 
 import CardDetails from './components/cardDetails';
 
