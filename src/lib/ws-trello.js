@@ -3,9 +3,6 @@ function connect(token, callbacks = [], listened = []) {
 
     let socket;
     let reqid = 0
-    function listenTo(boardId) {
-        socket.send(JSON.stringify({"type":"subscribe","modelType":"Board","idModel":boardId,"tags":["clientActions","updates"],"invitationTokens":[],"reqid":reqid++}))
-    }
 
 
     function _connect() {
@@ -13,7 +10,7 @@ function connect(token, callbacks = [], listened = []) {
 
         socket.onopen = () => {
             console.info("connected", new Date())
-            listened.map(listenTo)
+            listened.map((e) => socket.send(e))
         }
 
         socket.onmessage = data => {
@@ -44,10 +41,23 @@ function connect(token, callbacks = [], listened = []) {
     const api = {
         onEvent: callback => {
             callbacks.push(callback)
+
+            return () => {
+                callbacks.splice(callbacks.indexOf(callback), 1)
+            }
         },
-        listenTo: boardId => {
-            listened.push(boardId)
-            listenTo(boardId)
+        listenTo: (type,id) => {
+            if(type == "member")
+                var query = {"type":"subscribe","modelType":"Member","idModel":id,"tags":["messages","updates"],"invitationTokens":[],"reqid":reqid++}
+            if(type == "board")
+                query = {"type":"subscribe","modelType":"Board","idModel":id,"tags":["clientActions","updates"],"invitationTokens":[],"reqid":reqid++}
+            if(type == "orga")
+                query = {"type":"subscribe","modelType":"Organization","idModel":id,"tags":["allActions","updates"],"invitationTokens":[],"reqid":reqid++}
+
+            listened.push(JSON.stringify(query))
+        },
+        getStatus() {
+            return socket.readyState
         }
     }
 

@@ -40,7 +40,7 @@ class CardDetails extends Component {
                             Checklist: {card.checklists.length}<br />
                             <If test={card.checklists.length}>
                                 {card.checklists.map(checklist =>
-                                    <div>
+                                    <div key={`checklist_${checklist.id}`}>
                                         <h3><Icon icon="check-square-o"/><Emoji>{checklist.name}</Emoji></h3>
                                             {checklist.checkItems.map(item =>
                                                 <div>

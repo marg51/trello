@@ -1,4 +1,5 @@
 import {store} from '../'
+import WS from './ws-trello'
 
 const cache = {}
 const decorate = (endpoint, callback) =>  {
@@ -18,6 +19,8 @@ const decorate = (endpoint, callback) =>  {
     return cache[endpoint]
 }
 
+
+var ws;
 export default {
     login: () =>
         new Promise((resolve, reject) => {
@@ -28,11 +31,17 @@ export default {
                     read: true,
                     write: true },
                 expiration: "never",
-                success: () => resolve(),
+                success: () => {
+                    if(!ws)
+                        ws = WS(localStorage.getItem("trello_token")+'&key=05d910022daa0558e1ada897808482b2', [data => console.log(data)])
+
+                    return resolve()
+                },
                 error: () => reject()
             });
         }),
 
+    getMember: () => decorate('/members/me/', () => {}),
     getBoards: () => decorate('/members/me/boards', data => {
         data.map(board => {
             board.lists = []
@@ -83,5 +92,8 @@ export default {
         data.map(action => {
             store.dispatch({type: 'CARD:PUSH', id:cardId, field: "actions", value: action})
         })
-    })
+    }),
+    getWs() {
+        return ws;
+    }
 }

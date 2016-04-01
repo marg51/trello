@@ -8,6 +8,8 @@ import Emoji from '../../utils/emoji'
 
 class Board extends Component {
     componentWillMount() {
+        Trello.getWs().listenTo("board", this.props.params.boardId)
+
         Trello.getBoard(this.props.params.boardId).then(() =>
             // we don't wait for members
             Promise.all([

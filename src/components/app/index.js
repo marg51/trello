@@ -2,23 +2,35 @@ import React, { Component } from 'react';
 import { Router, Route, browserHistory, Link } from 'react-router'
 import {connect} from 'react-redux'
 import Trello from '../../lib/trello'
+import TrelloToActions from '../../lib/trello-to-actions'
 
-import CardDetails from '../cardDetails/'
+import Debug from '../../utils/debug'
 
-function Foo() {
-  return <div>I am Foo!</div>
-}
-
-function BoardContainer({children}) {
-  return <div><header>
-        Links:
-        {' '}
-        <Link to="/">Home</Link>
-        {' '}
-        <Link to="/boards">Boards</Link>
-      </header>
-      {children}
-    </div>
+class BoardContainer extends Component {
+    componentWillMount() {
+        Trello.getMember().then(data => {
+            Trello.getWs().listenTo("member", data.id)
+            Trello.getWs().listenTo("orga", "508666007e639aad130003e3")
+        })
+        Trello.getWs().onEvent(data => {
+            dispatch(TrelloToActions(data))
+        })
+    }
+    render() {
+        const children = this.props.children
+        return (<div>
+            <header>
+                Links:
+                {' '}
+                <Link to="/">Home</Link>
+                {' '}
+                <Link to="/boards">Boards</Link>
+                {' '}
+                Socket: <Debug object={Trello.getWs()}>{Trello.getWs().getStatus()}</Debug>
+            </header>
+            {children}
+        </div>)
+    }
 }
 
 class Bar extends Component {
@@ -52,7 +64,7 @@ function App({isLoggedIn, isModalOpen, children, dispatch}) {
     const closeModal = () => {dispatch({type: 'select:card', id: 0})}
     if(isLoggedIn)
         return (<div>
-            {BoardContainer({children})}
+            <BoardContainer>{children}</BoardContainer>
             </div>)
   return (
       <div>
