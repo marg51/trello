@@ -4,9 +4,11 @@ import {connect} from 'react-redux'
 import Trello from '../../lib/trello'
 import TrelloToActions from '../../lib/trello-to-actions'
 
+
+import Login from '../login'
 import Debug from '../../utils/debug'
 
-class BoardContainer extends Component {
+class AppContainer extends Component {
     componentWillMount() {
         Trello.getMember().then(data => {
             Trello.getWs().listenTo("member", data.id)
@@ -33,43 +35,16 @@ class BoardContainer extends Component {
     }
 }
 
-class Bar extends Component {
-  render() {
-    return (
-      <h1>B</h1>
-    );
-  }
-}
-
-function Login({dispatch}) {
-    function login() {
-        Trello.login().then(() => {
-            dispatch({type: 'login'})
-            Trello.getBoards()
-        }, () => {
-            alert('error')
-        })
-    }
-    login()
-    return (
-      <div>
-        <button onClick={login}>Please login</button>
-      </div>
-    );
-}
-
-const ConnectedLogin = connect((state) => ({state}))(Login)
-
 function App(props) {
     let {isLoggedIn, isModalOpen, children, dispatch, state} = props
     const closeModal = () => {dispatch({type: 'select:card', id: 0})}
     if(isLoggedIn)
         return (<div>
-            <BoardContainer {...props}>{children}</BoardContainer>
+            <AppContainer {...props}>{children}</AppContainer>
             </div>)
   return (
       <div>
-        <ConnectedLogin/>
+        <Login/>
       </div>
   )
 }

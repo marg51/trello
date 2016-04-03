@@ -37,13 +37,12 @@ class CardDetails extends Component {
                                 <Marked text={card.desc}/>
                             </div>
 
-                            Checklist: {card.checklists.length}<br />
                             <If test={card.checklists.length}>
                                 {card.checklists.map(checklist =>
                                     <div key={`checklist_${checklist.id}`}>
                                         <h3><Icon icon="check-square-o"/><Emoji>{checklist.name}</Emoji></h3>
                                             {checklist.checkItems.map(item =>
-                                                <div>
+                                                <div key={`checkItem_${item.id}`}>
                                                     <If test={item.state == 'incomplete'}>
                                                         <Icon icon="circle-o"/>
                                                     </If>

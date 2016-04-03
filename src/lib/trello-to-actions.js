@@ -17,8 +17,6 @@ export default function(state, dispatch, event) {
                 if(results) {
                     if(actions[results[1].toLowerCase()]) {
                         if(entity[name] !== event.deltas[0][name]) {
-                            console.log("changes", name)
-                            debugger
                             dispatch(actions[results[1].toLowerCase()].popValue(entity[name], {field: event.typeName.toLowerCase()+'s', value: entity.id}))
                             dispatch(actions[results[1].toLowerCase()].push(event.deltas[0][name], {field: event.typeName.toLowerCase()+'s', value: event.deltas[0].id}))
                         }

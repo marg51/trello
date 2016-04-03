@@ -55,8 +55,8 @@ class Board extends Component {
         // if(false){ // !board || !this.state || !this.state.isReady) {
         if(!board || !this.state || !this.state.isReady) {
             return (
-                <div style={{height: "calc(100vh - 50px)", verticalAlign: "middle", textAlign: "center"}}>
-                    <Loader type="ball-clip-rotate-multiple" style={{width: "100px",height: "100px",lineHeight: "100px",margin: "auto",marginTop: "45vh",transform: "scale(2)"}}>Loading board</Loader>
+                <div style={{height: "calc(100vh - 50px)", display: "flex", alignItems: "center",justifyContent: "center", backgroundColor: "rgb(0, 121, 191)"}}>
+                    <span style={{transform: "scale(1.3)"}}><Loader type="ball-clip-rotate-multiple" style={{width: "100px",height: "100px",lineHeight: "100px",margin: "auto",marginTop: "45vh"}}>Loading board</Loader></span>
                 </div>)
         }
 
