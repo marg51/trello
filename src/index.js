@@ -15,21 +15,7 @@ import _ from 'lodash'
 
 window._ = _
 
-import Modal from 'react-modal'
-const style = {
-  overlay : {
-    zIndex            : 2,
-    backgroundColor   : 'rgba(0,0,0,.6)',
-    overflow: "auto"
-  }, content: {
-      maxWidth: "700px",
-      margin: "auto",
-      borderWidth: 0,
-      bottom: null,
-      marginBottom: "40px",
-      backgroundColor: "#F1F1F1"
-  }
-}
+import CardModal from './components/cardModal'
 
 
 import {reducers} from './store/reducers'
@@ -59,21 +45,8 @@ window.__store = store
 
 const history = syncHistoryWithStore(browserHistory, store)
 
-history.listen(location => console.log(location))
+// history.listen(location => console.log(location))
 
-import actions from './store/actions'
-
-function CardModal({params}) {
-    return (
-        <Modal
-            isOpen={true}
-            onRequestClose={() => browserHistory.push(`/board/${params.boardId}/`)}
-            style={style}
-            >
-                <CardDetails cardId={params.cardId}/>
-            </Modal>
-    )
-}
 
 ReactDOM.render(
   <Provider store={store}>
