@@ -24,7 +24,7 @@ class CardDetails extends Component {
         let {card, dispatch} = this.props
         return (
             <div>
-                <header><h2><Emoji>{card.name}</Emoji></h2></header>
+                <header><h2><Emoji>{card.name}</Emoji> <a href={card.url}><Icon icon="trello"/></a></h2></header>
 
                 <div>
                     <div>
