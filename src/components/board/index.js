@@ -30,7 +30,7 @@ class Board extends Component {
     }
 
 
-    shouldComponentUpdate(newProps, newState) {
+    ___shouldComponentUpdate(newProps, newState) {
         if(newProps.params.boardId != this.props.params.boardId) {
             console.log('new board')
             return true

@@ -21,7 +21,7 @@ class CardDetails extends Component {
     }
 
     render() {
-        let {card, dispatch} = this.props
+        let {card, actions, checklists, attachments, dispatch} = this.props
         return (
             <div>
                 <header><h2><Emoji>{card.name}</Emoji> <a href={card.url}><Icon icon="trello"/></a></h2></header>
@@ -38,7 +38,7 @@ class CardDetails extends Component {
                             </div>
 
                             <If test={card.checklists.length}>
-                                {card.checklists.map(checklist =>
+                                {card.checklists.map(id => checklists[id]).map(checklist =>
                                     <div key={`checklist_${checklist.id}`}>
                                         <h3><Icon icon="check-square-o"/><Emoji>{checklist.name}</Emoji></h3>
                                             {checklist.checkItems.map(item =>
@@ -60,12 +60,12 @@ class CardDetails extends Component {
 
                             <If test={card.attachments.length}>
                                 <ul>
-                                    {card.attachments.map(attachment => <li key={`action_${attachment.id}`}><MemberCard memberId={attachment.idMember}/> <img src={attachment.previews[1].url} style={{width:attachment.previews[1].width+'px', height:attachment.previews[1].height+'px'}} className="paper-2"/></li>)}
+                                    {card.attachments.map(id => attachments[id]).map(attachment => <li key={`action_${attachment.id}`}><MemberCard memberId={attachment.idMember}/> <img src={attachment.previews[1].url} style={{width:attachment.previews[1].width+'px', height:attachment.previews[1].height+'px'}} className="paper-2"/></li>)}
                                 </ul>
                             </If>
 
                             <If test={card.actions.length}>
-                                {card.actions.map(action => <div style={{marginTop: "20px"}}  key={`action_${action.id}`}><Action action={action}/></div>)}
+                                {card.actions.map(id => actions[id]).map(action => <div style={{marginTop: "20px"}}  key={`action_${action.id}`}><Action action={action}/></div>)}
                             </If>
 
                             <span style={{float: "right"}}>
@@ -81,4 +81,7 @@ class CardDetails extends Component {
     }
 }
 
-export default connect( (state, props) => ({card: state.entities.card.items[props.cardId]}))(CardDetails)
+export default connect( (state, props) => ({card: state.entities.card.items[props.cardId], actions: state.entities.action.items, checklists: state.entities.checklist.items, attachments: state.entities.attachment.items}))(CardDetails)
+
+
+

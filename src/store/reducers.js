@@ -93,6 +93,7 @@ const INIT_STATE = {
 
 export const reducers = combineReducers({
     checklist:      enhancer({PREFIX: "CHECKLIST:",      INIT_STATE}, emptyReducer),
+    attachment:     enhancer({PREFIX: "ATTACHMENT:",     INIT_STATE}, emptyReducer),
     card:           enhancer({PREFIX: "CARD:",           INIT_STATE}, emptyReducer),
     label:          enhancer({PREFIX: "LABEL:",          INIT_STATE}, emptyReducer),
     board:          enhancer({PREFIX: "BOARD:",          INIT_STATE}, emptyReducer),

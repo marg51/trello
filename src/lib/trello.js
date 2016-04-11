@@ -80,17 +80,20 @@ export default {
     }),
     getCardAttachments: (cardId) => decorate(`/cards/${cardId}/attachments`, (data) => {
         data.map(attachment => {
-            store.dispatch({type: 'CARD:PUSH', id:cardId, field: "attachments", value: attachment})
+            store.dispatch({type: 'ATTACHMENT:CREATE', object: attachment})
+            store.dispatch({type: 'CARD:PUSH', id:cardId, field: "attachments", value: attachment.id})
         })
     }),
     getCardChecklists: (cardId) => decorate(`/cards/${cardId}/checklists`, (data) => {
         data.map(checklist => {
-            store.dispatch({type: 'CARD:PUSH', id:cardId, field: "checklists", value: checklist})
+            store.dispatch({type: 'CHECKLIST:CREATE', object: checklist})
+            store.dispatch({type: 'CARD:PUSH', id:cardId, field: "checklists", value: checklist.id})
         })
     }),
     getCardActions: (cardId) => decorate(`/cards/${cardId}/actions?filter=all`/*addAttachmentToCard,commentCard`*/, (data) => {
         data.map(action => {
-            store.dispatch({type: 'CARD:PUSH', id:cardId, field: "actions", value: action})
+            store.dispatch({type: 'ACTION:CREATE', object: action})
+            store.dispatch({type: 'CARD:PUSH', id:cardId, field: "actions", value: action.id})
         })
     }),
     getWs() {
