@@ -11,7 +11,9 @@ function Card({card, dispatch}) {
     let input;
     return (
         <div>
-            <div>{card.labels.map(e => <Label label={e} key={`label_${e.id}`}/>)}</div>
+            <div>
+                {card.labels.map(e => <Label label={e} key={`label_${e.id}`}/>)}
+            </div>
             <Emoji>{card.name}</Emoji>
             <div>
                 <If test={card.badges.description}>
@@ -26,6 +28,12 @@ function Card({card, dispatch}) {
 
                 <If test={card.badges.checkItems}>
                     <Icon icon="check-square-o">{card.badges.checkItemsChecked}/{card.badges.checkItems}</Icon>
+                </If>
+                <If test={card.badges.size}>
+                    <u>{card.badges.size}</u>
+                </If>
+                <If test={moment(card.dateLastActivity).diff() > -300000}>
+                    <small className="_color_02"><Icon icon="pencil"/> {moment(card.dateLastActivity).fromNow()}</small>
                 </If>
 
                 <span style={{float: "right"}}>

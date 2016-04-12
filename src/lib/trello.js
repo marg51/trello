@@ -1,5 +1,6 @@
 import {store} from '../'
 import WS from './ws-trello'
+import actions from "../store/actions"
 
 const cache = {}
 const decorate = (endpoint, callback) =>  {
@@ -46,26 +47,27 @@ export default {
         data.map(board => {
             board.lists = []
             board.members = []
-            store.dispatch({type: 'BOARD:CREATE', object: board})
+            store.dispatch(actions.board.create(board))
         })
     }),
     getBoard: (boardId) => decorate(`/boards/${boardId}`, board => {
-        board.lists = []
-        store.dispatch({type: 'BOARD:CREATE', object: board})
+        store.dispatch(actions.board.create(board))
     }),
     getBoardLists: (boardId) => decorate(`/boards/${boardId}/lists`, (data) => {
         data.map(list => {
             list.cards = []
-            store.dispatch({type: 'LIST:CREATE', object: list})
-            store.dispatch({type: 'BOARD:PUSH', id:boardId, field: "lists", value: list.id})
+
+            store.dispatch(actions.list.create(list))
+            store.dispatch(actions.board.push(boardId, {field: "lists", value: list.id}))
         })
 
     }),
     getBoardMembers: (boardId) => decorate(`/boards/${boardId}/members?fields=fullName,username,avatarHash,initials`, (data) => {
-        data.map(list => {
-            list.cards = []
-            store.dispatch({type: 'MEMBER:CREATE', object: list})
-            store.dispatch({type: 'BOARD:PUSH', id:boardId, field: "members", value: list.id})
+        data.map(member => {
+            member.cards = []
+
+            store.dispatch(actions.member.create(member))
+            store.dispatch(actions.board.push(boardId, {field: "members", value: member.id}))
         })
 
     }),
@@ -74,26 +76,26 @@ export default {
             card.checklists = []
             card.attachments = []
             card.actions = []
-            store.dispatch({type: 'CARD:CREATE', object: card})
-            store.dispatch({type: 'LIST:PUSH', id:listId, field: "cards", value: card.id})
+            store.dispatch(actions.card.create(card))
+            store.dispatch(actions.list.push(listId, {field: "cards", value: card.id}))
         })
     }),
     getCardAttachments: (cardId) => decorate(`/cards/${cardId}/attachments`, (data) => {
         data.map(attachment => {
-            store.dispatch({type: 'ATTACHMENT:CREATE', object: attachment})
-            store.dispatch({type: 'CARD:PUSH', id:cardId, field: "attachments", value: attachment.id})
+            store.dispatch(actions.attachment.create(attachment))
+            store.dispatch(actions.card.push(cardId, {field: "attachments", value: attachment.id}))
         })
     }),
     getCardChecklists: (cardId) => decorate(`/cards/${cardId}/checklists`, (data) => {
         data.map(checklist => {
-            store.dispatch({type: 'CHECKLIST:CREATE', object: checklist})
-            store.dispatch({type: 'CARD:PUSH', id:cardId, field: "checklists", value: checklist.id})
+            store.dispatch(actions.checklist.create(checklist))
+            store.dispatch(actions.card.push(cardId, {field: "checklists", value: checklist.id}))
         })
     }),
     getCardActions: (cardId) => decorate(`/cards/${cardId}/actions?filter=all`/*addAttachmentToCard,commentCard`*/, (data) => {
         data.map(action => {
-            store.dispatch({type: 'ACTION:CREATE', object: action})
-            store.dispatch({type: 'CARD:PUSH', id:cardId, field: "actions", value: action.id})
+            store.dispatch(actions.action.create(action))
+            store.dispatch(actions.card.push(cardId, {field: "actions", value: action.id}))
         })
     }),
     getWs() {

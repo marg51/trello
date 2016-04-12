@@ -90,11 +90,12 @@ function actionsCreatorFactory(prefix, {decorator= data => data} = {}) {
 
 export default {
     checklist:      actionsCreatorFactory("CHECKLIST:"),
-    card:           actionsCreatorFactory("CARD:", {decorator: data => {data.slug = "1";return data}}),
+    card:           actionsCreatorFactory("CARD:"),
     label:          actionsCreatorFactory("LABEL:"),
     board:          actionsCreatorFactory("BOARD:", {decorator: data => {if(!data.lists)data.lists = [];if(!data.members)data.members=[];return data}}),
     action:         actionsCreatorFactory("ACTION:"),
     list:           actionsCreatorFactory("LIST:"),
     member:         actionsCreatorFactory("MEMBER:"),
-    notification:   actionsCreatorFactory("NOTIFICATION:")
+    notification:   actionsCreatorFactory("NOTIFICATION:"),
+    attachment:   actionsCreatorFactory("ATTACHMENT:")
 }
