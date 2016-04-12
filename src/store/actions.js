@@ -1,4 +1,4 @@
-function actionsCreatorFactory(prefix) {
+function actionsCreatorFactory(prefix, {decorator= data => data} = {}) {
     return {
         create(object) {
             if(typeof object.id == "undefined") {
@@ -7,7 +7,7 @@ function actionsCreatorFactory(prefix) {
 
             return {
                 type: prefix+'CREATE',
-                object
+                object: decorator(object)
             }
         },
         remove(id) {
@@ -28,7 +28,7 @@ function actionsCreatorFactory(prefix) {
             return {
                 type: prefix+'UPDATE',
                 id,
-                object
+                object: decorator(object)
             }
         },
         pop(id, {field, index}) {
@@ -90,9 +90,9 @@ function actionsCreatorFactory(prefix) {
 
 export default {
     checklist:      actionsCreatorFactory("CHECKLIST:"),
-    card:           actionsCreatorFactory("CARD:"),
+    card:           actionsCreatorFactory("CARD:", {decorator: data => {data.slug = "1";return data}}),
     label:          actionsCreatorFactory("LABEL:"),
-    board:          actionsCreatorFactory("BOARD:"),
+    board:          actionsCreatorFactory("BOARD:", {decorator: data => {if(!data.lists)data.lists = [];if(!data.members)data.members=[];return data}}),
     action:         actionsCreatorFactory("ACTION:"),
     list:           actionsCreatorFactory("LIST:"),
     member:         actionsCreatorFactory("MEMBER:"),
