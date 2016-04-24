@@ -33,7 +33,7 @@ function enhancer({PREFIX, INIT_STATE}, reducer) {
                         ...state.items,
                         [action.id]: {
                             ...state.items[action.id],
-                            action.object
+                            ...action.object
                         }
                     }
                 }
