@@ -44,13 +44,19 @@ export default {
 
     getMember: () => decorate('/members/me/', () => {}),
     getBoards: () => decorate('/members/me/boards', data => {
-        data.map(board => {
-            board.lists = []
-            board.members = []
+        data
+          .map(board => {
+            if(!__store.getState().entities.board.items[board.id]) {
+                board.lists = []
+                board.members = []
+            }
+
             store.dispatch(actions.board.create(board))
         })
     }),
     getBoard: (boardId) => decorate(`/boards/${boardId}`, board => {
+        board.lists = []
+        board.members = []
         store.dispatch(actions.board.create(board))
     }),
     getBoardLists: (boardId) => decorate(`/boards/${boardId}/lists`, (data) => {

@@ -1,4 +1,4 @@
-function actionsCreatorFactory(prefix, {decorator= data => data} = {}) {
+function actionsCreatorFactory(prefix) {
     return {
         create(object) {
             if(typeof object.id == "undefined") {
@@ -7,7 +7,7 @@ function actionsCreatorFactory(prefix, {decorator= data => data} = {}) {
 
             return {
                 type: prefix+'CREATE',
-                object: decorator(object)
+                object
             }
         },
         remove(id) {
@@ -28,7 +28,7 @@ function actionsCreatorFactory(prefix, {decorator= data => data} = {}) {
             return {
                 type: prefix+'UPDATE',
                 id,
-                object: decorator(object)
+                object
             }
         },
         pop(id, {field, index}) {

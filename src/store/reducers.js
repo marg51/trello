@@ -4,7 +4,20 @@ function enhancer({PREFIX, INIT_STATE}, reducer) {
     return function enhancedReducer(state = {...INIT_STATE}, action) {
         switch(action.type) {
             case PREFIX+'CREATE':
-                // don't add duplicates
+                if(state.ids.includes(action.object.id)) {
+                        console.log("merging", state.items[action.object.id], action.object)
+                        return {
+                                ...state,
+                                items: {
+                                        ...state.items,
+                                        [action.object.id]: {
+                                                ...state.items[action.object.id],
+                                                ...action.object
+                                        }
+                                }
+                        }
+                }
+                // don't add duplicate IDs
                 const ids = (state.ids.includes(action.object.id)) ? state.ids : [...state.ids, action.object.id]
                 return {
                     ...state,

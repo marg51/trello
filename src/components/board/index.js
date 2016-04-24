@@ -5,6 +5,8 @@ import List from '../list'
 import Trello from '../../lib/trello'
 import Loader from 'react-loaders'
 import Emoji from '../../utils/emoji'
+import Debug from '../../utils/debug'
+
 
 class Board extends Component {
     componentWillMount() {
@@ -55,14 +57,14 @@ class Board extends Component {
         // if(false){ // !board || !this.state || !this.state.isReady) {
         if(!board || !this.state || !this.state.isReady) {
             return (
-                <div style={{height: "calc(100vh - 50px)", display: "flex", alignItems: "center",justifyContent: "center", backgroundColor: "rgb(0, 121, 191)"}}>
+                <div style={{height: "calc(100vh - 18px)", display: "flex", alignItems: "center",justifyContent: "center", backgroundColor: "rgb(0, 121, 191)"}}>
                     <span style={{transform: "scale(1.3)"}}><Loader type="ball-clip-rotate-multiple" style={{width: "100px",height: "100px",lineHeight: "100px",margin: "auto",marginTop: "45vh"}}>Loading board</Loader></span>
                 </div>)
         }
 
         return (
-            <div className="board" style={{background: board.prefs.backgroundColor, color: (board.prefs.backgroundBrightness == "dark")?'white':'black'}}>
-                <h1><Emoji>{board.name}</Emoji></h1>
+            <div className="board" style={{height: "calc(100vh - 38px)", background: board.prefs.backgroundColor, color: (board.prefs.backgroundBrightness == "dark")?'white':'black'}}>
+                <h1><Emoji>{board.name}</Emoji> <Debug object={board}>*</Debug></h1>
                 {_(board.lists).map(listId => lists[listId]).sortBy('pos').map(list =>
                     <div key={`list_${list.id}`} className="list"><List listId={list.id}/></div>
                 ).value()}
