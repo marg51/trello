@@ -11,33 +11,41 @@ import Marked from '../../utils/marked'
 import Emoji from '../../utils/emoji'
 
 
+
 function Action({action, member, dispatch}) {
+    const memberName = <b>{member.fullName}</b>
+
     return (
         <div>
             <span style={{float: "left", marginRight: "10px"}}>
                 <MemberCard memberId={action.idMemberCreator}/>
             </span>
             {' '}
-            <b>{member.fullName}</b> - <Debug object={action}>{action.type}</Debug>
-            <br />
             <div style={{marginLeft: "40px"}}>
                 <If test={action.type == "commentCard"}>
+                    {memberName} <br />
                     <Marked text={action.data.text} className="paper" style={{background: "white", padding: "10px", borderRadius: "3px"}}/>
                 </If>
                 <If test={action.type == "addAttachmentToCard"}>
                     <If test={action.data.attachment && action.data.attachment.previewUrl}>
-                        {() => (<img src={action.data.attachment.previewUrl} style={{maxWidth: "660px"}} className="paper-2"/>)}
+                        {() => (<span>{memberName} attached <a href={action.data.attachment.url}>{action.data.attachment.name}</a><br /><img src={action.data.attachment.previewUrl} style={{maxWidth: "660px"}} className="paper-2"/></span>)}
                     </If>
                     <If test={!(action.data.attachment && action.data.attachment.previewUrl)}>
-                        <em> Deleted attachment</em>
+                        {memberName}<em> Deleted attachment</em>
                     </If>
                 </If>
 
-                <If test={action.type == "addMemberToCard"}>
-                    {() => (<span><MemberCard memberId={action.data.idMember}/> Joined</span>)}
+                <If test={action.type == "addMemberToCard" && action.data.idMember == member.id}>
+                    {() => (<span>{memberName} joined this card</span>)}
                 </If>
-                <If test={action.type == "removeMemberFromCard"}>
-                    {() => (<span><MemberCard memberId={action.data.idMember}/> Left</span>)}
+                <If test={action.type == "addMemberToCard" && action.data.idMember != member.id}>
+                    {() => (<span>{memberName} added <MemberCard memberId={action.data.idMember}/> to card</span>)}
+                </If>
+                <If test={action.type == "removeMemberFromCard" && action.data.idMember == member.id}>
+                    {() => (<span>{memberName} left card</span>)}
+                </If>
+                <If test={action.type == "removeMemberFromCard" && action.data.idMember != member.id}>
+                    {() => (<span>{memberName} removed <MemberCard memberId={action.data.idMember}/> from card</span>)}
                 </If>
                 <If test={action.type == "createCard"}>
                     {() => (<div className="_color_02">added this card to <small>{action.data.list.name}</small></div>)}
@@ -50,9 +58,11 @@ function Action({action, member, dispatch}) {
                         <If test={action.data.old && action.data.old.pos}>
                             {() => (<em>Moved card {(() => ((action.data.old.pos > action.data.card.pos)?"up":"down"))()}</em>)}
                         </If>
+                        {action.data.old && Object.keys(action.data.old)}
                     </span>)}
                 </If>
-                <small className="_color_02"><Moment date={action.date} method="fromNow"/> <Moment date={action.date}/></small>
+                <br />
+                <small className="_color_02"><Moment date={action.date} method="fromNow"/> <Moment date={action.date}/></small> <Debug object={action}>{action.type}</Debug>
             </div>
         </div>
     )
