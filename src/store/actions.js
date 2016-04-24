@@ -92,7 +92,7 @@ export default {
     checklist:      actionsCreatorFactory("CHECKLIST:"),
     card:           actionsCreatorFactory("CARD:"),
     label:          actionsCreatorFactory("LABEL:"),
-    board:          actionsCreatorFactory("BOARD:", {decorator: data => {if(!data.lists)data.lists = [];if(!data.members)data.members=[];return data}}),
+    board:          actionsCreatorFactory("BOARD:"),
     action:         actionsCreatorFactory("ACTION:"),
     list:           actionsCreatorFactory("LIST:"),
     member:         actionsCreatorFactory("MEMBER:"),

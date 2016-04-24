@@ -1,6 +1,6 @@
 import {combineReducers} from 'redux'
 
-function enhancer({PREFIX, INIT_STATE, decorator = data => data}, reducer) {
+function enhancer({PREFIX, INIT_STATE}, reducer) {
     return function enhancedReducer(state = {...INIT_STATE}, action) {
         switch(action.type) {
             case PREFIX+'CREATE':
@@ -10,7 +10,7 @@ function enhancer({PREFIX, INIT_STATE, decorator = data => data}, reducer) {
                     ...state,
                     items: {
                         ...state.items,
-                        [action.object.id]: decorator(action.object, action.object)
+                        [action.object.id]: action.object
                     },
                     ids
                 }
@@ -33,7 +33,7 @@ function enhancer({PREFIX, INIT_STATE, decorator = data => data}, reducer) {
                         ...state.items,
                         [action.id]: {
                             ...state.items[action.id],
-                            ...decorator(action.object, state.items[action.id])
+                            action.object
                         }
                     }
                 }
@@ -91,22 +91,10 @@ const INIT_STATE = {
     ids: []
 }
 
-function cardDecorator(newValue, oldValue) {
-    let match
-    if(newValue.name && (match = newValue.name.match(/^\(([0-9]*)\) ?(.*)$/))) {
-        if(!newValue.badges)
-            newValue.badges = {...oldValue.badges}
-        newValue.badges.size = match[1]
-        newValue.name = match[2]
-    }
-
-    return newValue
-}
-
 export const reducers = combineReducers({
     checklist:      enhancer({PREFIX: "CHECKLIST:",      INIT_STATE}, emptyReducer),
     attachment:     enhancer({PREFIX: "ATTACHMENT:",     INIT_STATE}, emptyReducer),
-    card:           enhancer({PREFIX: "CARD:",           INIT_STATE, decorator: cardDecorator}, emptyReducer),
+    card:           enhancer({PREFIX: "CARD:",           INIT_STATE}, emptyReducer),
     label:          enhancer({PREFIX: "LABEL:",          INIT_STATE}, emptyReducer),
     board:          enhancer({PREFIX: "BOARD:",          INIT_STATE}, emptyReducer),
     action:         enhancer({PREFIX: "ACTION:",         INIT_STATE}, emptyReducer),
