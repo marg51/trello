@@ -6,9 +6,13 @@ import MemberCard from '../memberCard'
 import If from '../../utils/if'
 import Icon from '../../utils/icon'
 import Emoji from '../../utils/emoji'
+import {decorateTitle} from './helper'
 
 function Card({card, dispatch}) {
     let input;
+
+    card = decorateTitle(card)
+
     return (
         <div>
             <div>

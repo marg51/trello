@@ -8,6 +8,7 @@ import Icon from '../../utils/icon'
 import Marked from '../../utils/marked'
 import Emoji from '../../utils/emoji'
 import Action from '../action'
+import {decorateTitle} from '../card/helper'
 
 import Trello from '../../lib/trello'
 
@@ -22,9 +23,12 @@ class CardDetails extends Component {
 
     render() {
         let {card, actions, checklists, attachments, dispatch} = this.props
+
+        card = decorateTitle(card)
+
         return (
             <div>
-                <header><h2><Emoji>{card.name}</Emoji> <a href={card.url}><Icon icon="trello"/></a></h2></header>
+                <header><h2><Emoji>{card.name}</Emoji> <a href={card.url}><Icon icon="trello"/></a><span style={{float: "right"}}>{card.badges.size}</span></h2></header>
 
                 <div>
                     <div>
