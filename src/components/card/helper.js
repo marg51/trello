@@ -1,5 +1,13 @@
+const wm = new WeakMap()
+
 export function decorateTitle(card, state) {
         var result
+        const original = card
+        if(wm.has(card)) {
+            console.count(`already has card ${card.id}`)
+            return wm.get(card)
+        }
+        console.count(`no card ${card.id}`)
 
         if(result = card.name.match(/^\(([0-9]+)\) ?(.*)$/)) {
                 card = {
@@ -28,7 +36,7 @@ export function decorateTitle(card, state) {
                 }
             })
 
-
+        wm.set(original, card)
         return card
 
 }
