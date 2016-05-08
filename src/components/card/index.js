@@ -8,10 +8,10 @@ import Icon from '../../utils/icon'
 import Emoji from '../../utils/emoji'
 import {decorateTitle} from './helper'
 
-function Card({card, dispatch}) {
+function Card({card, dispatch, state}) {
     let input;
 
-    card = decorateTitle(card)
+    card = decorateTitle(card, state)
 
     return (
         <div>
@@ -50,4 +50,4 @@ function Card({card, dispatch}) {
     )
 }
 
-export default connect( (state, props) => ({card: state.entities.card.items[props.cardId]}))(Card)
+export default connect( (state, props) => ({card: state.entities.card.items[props.cardId], state}))(Card)

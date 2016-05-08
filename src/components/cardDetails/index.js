@@ -24,10 +24,10 @@ class CardDetails extends Component {
     }
 
     render() {
-        let {card, actions, checklists, attachments, dispatch} = this.props
+        let {card, actions, checklists, attachments, dispatch, state} = this.props
 
         console.count("renderCardDetails")
-        card = decorateTitle(card)
+        card = decorateTitle(card, state)
 
         return (
             <div>
@@ -49,6 +49,12 @@ class CardDetails extends Component {
                             <div style={{margin: "30px 0", backgroundColor: "white", padding: "10px", borderRadius: "5px"}} className="paper">
                                 <Marked text={card.desc}/>
                             </div>
+                            <If test={card.links.length}>
+                                <h4>Links</h4>
+                                <div>
+                                    {card.links.map(link => <a href={link} key={`cardlink_${link}`}>{link}</a>)}
+                                </div>
+                            </If>
                             <If test={card.attachments.length}>
                                 <h4><Icon icon="paperclip"/> Attachments</h4>
                                 {card.attachments.map(id => attachments[id]).map(attachment =>
@@ -78,7 +84,7 @@ class CardDetails extends Component {
 
 
                             <If test={card.actions.length}>
-                                {card.actions.map(id => actions[id]).map(action => <div style={{marginTop: "20px"}}  key={`action_${action.id}`}><Action action={action}/></div>)}
+                                {card.actions.map(id => actions[id]).filter(action => ["addMemberToCard","commentCard", "createCard", "removeMemberFromCard", "movedCard"].indexOf(action.type)>-1).map(action => <div style={{marginTop: "20px"}}  key={`action_${action.id}`}><Action action={action}/></div>)}
                             </If>
 
                         </div>
@@ -89,7 +95,4 @@ class CardDetails extends Component {
     }
 }
 
-export default connect( (state, props) => ({card: state.entities.card.items[props.cardId], actions: state.entities.action.items, checklists: state.entities.checklist.items, attachments: state.entities.attachment.items}))(CardDetails)
-
-
-
+export default connect( (state, props) => ({card: state.entities.card.items[props.cardId], actions: state.entities.action.items, checklists: state.entities.checklist.items, attachments: state.entities.attachment.items, state}))(CardDetails)
