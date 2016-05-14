@@ -6,6 +6,7 @@ import MemberCard from '../memberCard'
 import If from '../../utils/if'
 import Icon from '../../utils/icon'
 import Marked from '../../utils/marked'
+import Loader from 'react-loaders'
 import Emoji from '../../utils/emoji'
 import Debug from '../../utils/debug'
 import Action from '../action'
@@ -18,9 +19,24 @@ import Trello from '../../lib/trello'
 class CardDetails extends Component {
 
     componentWillMount() {
-        Trello.getCardAttachments(this.props.cardId)
-        Trello.getCardChecklists(this.props.cardId)
-        Trello.getCardActions(this.props.cardId)
+        this.setState({promise: {isLoading: true}})
+        Promise.all([
+            Trello.getCardAttachments(this.props.cardId),
+            Trello.getCardChecklists(this.props.cardId),
+            Trello.getCardActions(this.props.cardId)
+        ]).then(() => {
+            this.setState({promise: {isLoading: false, isLoaded: true}})
+        }).catch(() => {
+            this.setState({promise: {isLoading: false, hasError: true}})
+        })
+    }
+    shouldComponentUpdate(newProps, newState) {
+        if(newProps.card != this.props.card) {
+            console.count(this.props.card.id+ " changed")
+        } else {
+            console.count(this.props.card.id+" prevented update")
+        }
+        return newProps.card != this.props.card
     }
 
     render() {
@@ -35,7 +51,7 @@ class CardDetails extends Component {
 
                 <div>
                     <div>
-                        <If test={card.idMembers}>
+                        <If test={card.idMembers.length}>
                             <div style={{float: "left", marginRight: "10px"}}>
                                 <span className="_color_02">Members</span>
                                 <div>{card.idMembers.map(e => <MemberCard memberId={e} key={`member_${e}`}/>)}</div>
@@ -85,6 +101,13 @@ class CardDetails extends Component {
 
                             <If test={card.actions.length}>
                                 {card.actions.map(id => actions[id]).filter(action => ["addMemberToCard","commentCard", "createCard", "removeMemberFromCard", "movedCard"].indexOf(action.type)>-1).map(action => <div style={{marginTop: "20px"}}  key={`action_${action.id}`}><Action action={action}/></div>)}
+                            </If>
+
+
+                            <If test={this.state.promise.isLoading}>
+                                <div style={{height: "70px", width: "100px",margin: "auto"}}>
+                                    <Loader type="ball-clip-rotate-multiple" style={{width: "100px",height: "100px",lineHeight: "100px",margin: "auto",marginTop: "45vh"}}>Loading board</Loader>
+                                </div>
                             </If>
 
                         </div>
