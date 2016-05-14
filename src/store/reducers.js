@@ -25,6 +25,10 @@ function enhancer({PREFIX, INIT_STATE}, reducer) {
                         ...state.items,
                         [action.object.id]: action.object
                     },
+                    idShorts: {
+                        ...state.idShorts,
+                        [action.object.idShort]: action.object.id
+                    },
                     ids
                 }
             case PREFIX+'DELETE':

@@ -1,11 +1,11 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import { Link } from 'react-router'
 import Label from '../label'
 import MemberCard from '../memberCard'
 import If from '../../utils/if'
 import Icon from '../../utils/icon'
 import Marked from '../../utils/marked'
+import Link from '../../utils/link'
 import Loader from 'react-loaders'
 import Emoji from '../../utils/emoji'
 import Debug from '../../utils/debug'
@@ -31,10 +31,8 @@ class CardDetails extends Component {
         })
     }
     shouldComponentUpdate(newProps, newState) {
-        if(newProps.card != this.props.card) {
-            console.count(this.props.card.id+ " changed")
-        } else {
-            console.count(this.props.card.id+" prevented update")
+        if(newProps.card == this.props.card) {
+            console.count("prevented update")
         }
         return newProps.card != this.props.card
     }
@@ -47,7 +45,16 @@ class CardDetails extends Component {
 
         return (
             <div>
-                <header><h2><Emoji>{card.name}</Emoji><Debug object={card}>*</Debug><a href={card.url}><Icon icon="trello"/></a><span style={{float: "right"}}>{card.badges.size}</span></h2></header>
+                <header>
+                    <h2>
+                        <Marked text={card.name}/>
+                        <span style={{float: "right"}}>
+                            <Debug object={card}>_</Debug> {' '}
+                            <a href={card.url}><Icon icon="trello"/></a>
+                            {card.badges.size}
+                        </span>
+                    </h2>
+                </header>
 
                 <div>
                     <div>
@@ -62,14 +69,16 @@ class CardDetails extends Component {
                             <div>{card.labels.map(e => <Label label={e} key={`label_${e.id}`}/>)}</div>
                         </If>
                         <div>
-                            <div style={{margin: "30px 0", backgroundColor: "white", padding: "10px", borderRadius: "5px"}} className="paper">
-                                <Marked text={card.desc}/>
-                            </div>
+                            <If test={card.desc}>
+                                <div style={{margin: "30px 0", backgroundColor: "white", padding: "10px", borderRadius: "5px"}} className="paper">
+                                    <Marked text={card.desc}/>
+                                </div>
+                            </If>
                             <If test={card.links.length}>
                                 <h4>Links</h4>
-                                <div>
-                                    {card.links.map(link => <a href={link} key={`cardlink_${link}`}>{link}</a>)}
-                                </div>
+                                <ul>
+                                    {card.links.map(link => <li key={`cardlink_${link}`}><Link link={link}/></li>)}
+                                </ul>
                             </If>
                             <If test={card.attachments.length}>
                                 <h4><Icon icon="paperclip"/> Attachments</h4>
@@ -91,7 +100,7 @@ class CardDetails extends Component {
                                                         <Icon icon="check-circle-o" style={{color: "green"}}/>
                                                     </If>
                                                     {' '}
-                                                    <Emoji>{item.name}</Emoji>
+                                                    <Marked text={item.name}/>
                                                 </div>
                                             )}
                                         </div>

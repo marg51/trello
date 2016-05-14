@@ -10,10 +10,8 @@ import {decorateTitle} from './helper'
 
 class Card extends Component {
     shouldComponentUpdate(newProps, newState) {
-        if(newProps.card != this.props.card) {
-            console.count(this.props.card.id+ " changed")
-        } else {
-            console.count(this.props.card.id+" prevented update")
+        if(newProps.card == this.props.card) {
+            console.count("prevented update")
         }
         return newProps.card != this.props.card
     }

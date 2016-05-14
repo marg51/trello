@@ -29,7 +29,7 @@ console.log(reducers)
 const batchUpdates = _.debounce(notify => {
     console.count("notify")
     notify()
-},20)
+},10)
 export const store = createStore(
   combineReducers({
     entities: reducers,

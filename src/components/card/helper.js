@@ -4,10 +4,9 @@ export function decorateTitle(card, state) {
         var result
         const original = card
         if(wm.has(card)) {
-            console.count(`already has card ${card.id}`)
+            console.count(`prevented update`)
             return wm.get(card)
         }
-        console.count(`no card ${card.id}`)
 
         if(result = card.name.match(/^\(([0-9]+)\) ?(.*)$/)) {
                 card = {
@@ -28,8 +27,7 @@ export function decorateTitle(card, state) {
             .map(actionId => state.entities.action.items[actionId])
             .filter(action => action.type == "commentCard" && action.data.text)
             .map(action => {
-                console.log(action)
-                const result = action.data.text.match(/(https:\/\/(?:trello.com|projects.invisionapp.com)[^\s]+)/g)
+                const result = action.data.text.match(/(https:\/\/(?:trello.com|projects.invisionapp.com|github.com)[^\s]+)/g)
 
                 if(result) {
                     card.links.push(...result)
