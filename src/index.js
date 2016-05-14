@@ -5,7 +5,10 @@ import ReactDOM from 'react-dom';
 import App from './components/app';
 import BoardList from './components/boardList';
 import BoardContainer from './components/board';
-import {createStore, combineReducers} from 'redux'
+
+import {createStore, combineReducers, compose} from 'redux'
+import { batchedSubscribe } from 'redux-batched-subscribe';
+
 import { Provider } from 'react-redux'
 import { Router, Route, browserHistory, IndexRoute } from 'react-router'
 import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
@@ -23,6 +26,10 @@ import {reducers} from './store/reducers'
 // import MockTrello from './lib/trello.mock.js'
 
 console.log(reducers)
+const batchUpdates = _.debounce(notify => {
+    console.count("notify")
+    notify()
+},20)
 export const store = createStore(
   combineReducers({
     entities: reducers,
@@ -38,7 +45,10 @@ export const store = createStore(
   }),
   {},
 // MockTrello,
-  window.devToolsExtension ? window.devToolsExtension() : undefined
+  compose(
+    batchedSubscribe(batchUpdates),
+      window.devToolsExtension ? window.devToolsExtension() : undefined,
+  )
 )
 
 window.__store = store
