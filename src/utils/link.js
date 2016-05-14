@@ -45,6 +45,11 @@ function getMeta(link) {
             human: link.replace(/.*github.com\/([a-z_-]*)\/([a-z_-]*)(\/(.*))?$/, "$1/$2 $4")
         }
     }
+
+    return {
+        icon: "external-link",
+        human: link
+    }
 }
 
 export default Link
