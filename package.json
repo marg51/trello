@@ -5,6 +5,7 @@
   "scripts": {
     "start": "node server.js",
     "lint": "eslint src",
+    "minify": "./node_modules/uglify-js/bin/uglifyjs --compress -o dist/bundle.js dist/bundle.js",
     "prod": "webpack --config webpack.prod.config.js"
   },
   "repository": {
@@ -54,6 +55,7 @@
     "react-router": "^2.0.1",
     "react-router-redux": "^4.0.1",
     "redux": "^3.3.1",
-    "redux-batched-subscribe": "^0.1.4"
+    "redux-batched-subscribe": "^0.1.4",
+    "uglifyjs": "^2.4.10"
   }
 }
