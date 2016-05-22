@@ -45,10 +45,10 @@ export const store = createStore(
   }),
   {},
 // MockTrello,
-  compose(
+  //compose(
     batchedSubscribe(batchUpdates),
-      window.devToolsExtension ? window.devToolsExtension() : undefined,
-  )
+    //  window.devToolsExtension ? window.devToolsExtension() : undefined,
+  //)
 )
 
 window.__store = store
