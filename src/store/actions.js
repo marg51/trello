@@ -67,7 +67,7 @@ function actionsCreatorFactory(prefix) {
                 value
             }
         },
-        push(id, {field, value}) {
+        push(id, {field, value, index}) {
             if(typeof id == "undefined") {
                 throw new Error('id is required')
             }
@@ -82,7 +82,8 @@ function actionsCreatorFactory(prefix) {
                 type: prefix+'PUSH',
                 id,
                 field,
-                value
+                value,
+                index
             }
         }
     }

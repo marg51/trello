@@ -4,7 +4,7 @@ export function decorateTitle(card, state) {
         var result
         const original = card
         if(wm.has(card)) {
-            console.count(`prevented update`)
+            console.count(`prevented title update`)
             return wm.get(card)
         }
 

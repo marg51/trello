@@ -44,9 +44,7 @@ function BoardList({boardsId,boards, select}) {
                             <Link to={`/board/${board.id}/`}  style={getStyle_a(board)} key={`orga_board_${board.id}`}><div style={getStyle(board)}> <Emoji>{board.name}</Emoji></div></Link>
                         )
                     }
-                    <div style={{clear: 'both', height: "20px"}}/>
-                    </div>
-
+                    <div style={{clear: 'both', height: "20px"}}/></div>
                 )
                 .value()
         }

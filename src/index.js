@@ -6,8 +6,10 @@ import App from './components/app';
 import BoardList from './components/boardList';
 import BoardContainer from './components/board';
 
-import {createStore, combineReducers, compose} from 'redux'
+import {createStore, combineReducers, compose, applyMiddleware} from 'redux'
 import { batchedSubscribe } from 'redux-batched-subscribe';
+import createLogger from 'redux-logger';
+const logger = createLogger();
 
 import { Provider } from 'react-redux'
 import { Router, Route, browserHistory, IndexRoute } from 'react-router'
@@ -22,7 +24,6 @@ import CardModal from './components/cardModal'
 
 
 import {reducers} from './store/reducers'
-
 // import MockTrello from './lib/trello.mock.js'
 
 console.log(reducers)
@@ -43,12 +44,8 @@ export const store = createStore(
     },
     routing: routerReducer
   }),
-  {},
-// MockTrello,
-  //compose(
-    batchedSubscribe(batchUpdates),
-    //  window.devToolsExtension ? window.devToolsExtension() : undefined,
-  //)
+  applyMiddleware(logger),
+  batchedSubscribe(batchUpdates)
 )
 
 window.__store = store

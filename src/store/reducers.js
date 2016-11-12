@@ -86,13 +86,24 @@ function enhancer({PREFIX, INIT_STATE}, reducer) {
                 if(!state.items[action.id][action.field] || state.items[action.id][action.field].includes(action.value))
                     return state
 
+                let newField
+                // accepts -1, -2 … BUT -1 == before last
+                if(typeof action.index != "undefined")
+                    newField = [
+                        ...state.items[action.id][action.field].slice(0, action.index),
+                        action.value,
+                        ...state.items[action.id][action.field].slice(action.index)
+                    ]
+                else
+                    newField = [...state.items[action.id][action.field], action.value]
+
                 return {
                     ...state,
                     items: {
                         ...state.items,
                         [action.id]: {
                             ...state.items[action.id],
-                            [action.field]: [...state.items[action.id][action.field], action.value]
+                            [action.field]: newField
                         }
                     }
                 }

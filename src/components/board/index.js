@@ -7,6 +7,11 @@ import Loader from 'react-loaders'
 import Emoji from '../../utils/emoji'
 import Debug from '../../utils/debug'
 
+import DraggingCard from "../card/draggingCard"
+
+
+import { DragDropContext } from 'react-dnd';
+import HTML5Backend from 'react-dnd-html5-backend';
 
 class Board extends Component {
     componentWillMount() {
@@ -32,7 +37,7 @@ class Board extends Component {
     }
 
 
-    ___shouldComponentUpdate(newProps, newState) {
+    __shouldComponentUpdate(newProps, newState) {
         if(newProps.params.boardId != this.props.params.boardId) {
             console.log('new board')
             return true
@@ -69,13 +74,19 @@ class Board extends Component {
                     <div key={`list_${list.id}`} className="list"><List listId={list.id}/></div>
                 ).value()}
                 {this.props.children}
+                <DraggingCard/>
             </div>
         )
     }
 }
 
-function BoardContainer(props) {
-    return (<div><Board key={`board_${props.boardId}`} {...props}/></div>)
+class BoardContainer extends Component {
+    render() {
+        const props = this.props
+        return (<div><Board key={`board_${props.boardId}`} {...props}/></div>)
+    }
 }
 
-export default connect( (state, props) => ({boardId: props.params.boardId, boards: state.entities.board.items, lists: state.entities.list.items}))(BoardContainer)
+export default connect( (state, props) => ({boardId: props.params.boardId, boards: state.entities.board.items, lists: state.entities.list.items}))(
+    DragDropContext(HTML5Backend)(BoardContainer)
+)
