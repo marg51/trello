@@ -6,12 +6,20 @@ import { browserHistory } from 'react-router'
 import Emoji from '../../utils/emoji'
 import actions from '../../store/actions'
 
-import {DropTarget} from "react-dnd"
+import {DropTarget, DragSource} from "react-dnd"
 
-import DraggableCard from "../card/DraggableCard"
+import DraggableCard from "../card/draggableCard"
 
 import DropCardHere from "../card/dropCardHere"
 
+@DropTarget("card", { drop(props, monitor) {
+        if(monitor.didDrop()) return
+
+         const {id, listId} = monitor.getItem()
+         const {dispatch, list: {id: ownListId}} = props
+         dispatch(actions.list.popValue(listId, {field: "cards", value: id}))
+         dispatch(actions.list.push(ownListId, {field: "cards", value: id}))
+    }}, (connect, monitor) => ({connectDropTarget: connect.dropTarget(), isOver: monitor.isOver({ shallow: true })}))
 class List extends Component {
     render() {
         const {list, cards, dispatch, connectDropTarget, isOver} = this.props
@@ -20,7 +28,7 @@ class List extends Component {
         const dropCard = isOver?<DropCardHere/>:""
 
         return connectDropTarget(
-            <div>
+            <div className="list-element">
 
                 <header className="list-header"><Emoji>{list.name}</Emoji></header>
                 <div className="list-content">
@@ -36,13 +44,4 @@ class List extends Component {
     }
 }
 
-export default connect( (state, props) => ({list: state.entities.list.items[props.listId], cards: state.entities.card.items}))(
-    DropTarget("card", { drop(props, monitor) {
-        if(monitor.didDrop()) return
-
-         const {id, listId} = monitor.getItem()
-         const {dispatch, list: {id: ownListId}} = props
-         dispatch(actions.list.popValue(listId, {field: "cards", value: id}))
-         dispatch(actions.list.push(ownListId, {field: "cards", value: id}))
-    }}, (connect, monitor) => ({connectDropTarget: connect.dropTarget(), isOver: monitor.isOver({ shallow: true })}))(List)
-)
+export default connect( (state, props) => ({list: state.entities.list.items[props.listId], cards: state.entities.card.items, boards: state.entities.board.items}))(List)

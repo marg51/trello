@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import { Link } from 'react-router'
-import List from '../list'
+import DraggableList from '../list/draggableList'
 import Trello from '../../lib/trello'
 import Loader from 'react-loaders'
 import Emoji from '../../utils/emoji'
@@ -70,8 +70,8 @@ class Board extends Component {
         return (
             <div className="board" style={{height: "calc(100vh - 38px)", background: board.prefs.backgroundColor, color: (board.prefs.backgroundBrightness == "dark")?'white':'black'}}>
                 <h1><Emoji>{board.name}</Emoji> <Debug object={board}>*</Debug></h1>
-                {_(board.lists).map(listId => lists[listId]).sortBy('pos').map(list =>
-                    <div key={`list_${list.id}`} className="list"><List listId={list.id}/></div>
+                {_(board.lists).map(listId => lists[listId]).map(list =>
+                    <div key={`list_${list.id}`} className="list"><DraggableList listId={list.id} boardId={board.id}/></div>
                 ).value()}
                 {this.props.children}
                 <DraggingCard/>

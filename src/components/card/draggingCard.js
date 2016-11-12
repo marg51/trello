@@ -3,6 +3,7 @@ import React, {Component} from "react"
 import {DragLayer} from "react-dnd"
 
 import Card from "./index"
+import List from "../list"
 
 const layerStyles = {
   position: 'fixed',
@@ -55,6 +56,10 @@ export default class CustomDragLayer extends Component {
     case "card":
       return (
         <Card cardId={item.id}/>
+      );
+    case "list":
+      return (
+        <List listId={item.id}/>
       );
     default:
       return null;
